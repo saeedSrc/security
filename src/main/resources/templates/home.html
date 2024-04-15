@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Security Demo Home Page</title>
@@ -7,5 +7,29 @@
 <body>
 
 <h2> Welcome to the Security Home Page</h2>
+
+
+<p>
+    USer: <span sec:authentication="principal.username"></span>
+</p>
+
+
+<p>
+    Role: <span sec:authentication="principal.authorities"></span>
+</p>
+<hr>
+
+
+<p>
+    <a th:href="@{/leaders}">Leadership Meeting</a>
+</p>
+
+<p>
+    <a th:href="@{/systems}">Systems Meeting</a>
+</p>
+
+<form action="#" th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout">
+</form>
 </body>
 </html>

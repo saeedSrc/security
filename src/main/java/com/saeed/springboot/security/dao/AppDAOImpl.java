@@ -3,6 +3,7 @@ package com.saeed.springboot.security.dao;
 import com.saeed.springboot.security.entity.Course;
 import com.saeed.springboot.security.entity.Instructor;
 import com.saeed.springboot.security.entity.InstructorDetail;
+import com.saeed.springboot.security.entity.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,9 +113,63 @@ public class AppDAOImpl implements AppDAO {
     @Override
     @Transactional
     public void deleteCourseById(int id) {
-
         Course course = entityManager.find(Course.class, id);
-
         entityManager.remove(course);
+    }
+
+    @Override
+    @Transactional
+    public void SaveCourse(Course course) {
+        entityManager.persist(course);
+    }
+
+    @Override
+    public Course findCourseAndReviews(int id) {
+
+
+      TypedQuery<Course> query = entityManager.createQuery(
+              "select c from Course c "
+              + "JOIN FETCH c.reviews "
+              + "where c.id = :data", Course.class);
+
+      query.setParameter("data", id);
+
+      Course course = query.getSingleResult();
+
+      return course;
+    }
+
+    @Override
+    public Course findCourseStudentsByCourseId(int id) {
+
+        TypedQuery<Course> query = entityManager.createQuery(
+                "select c from Course c "
+                        + "JOIN FETCH c.students "
+                        + "where c.id = :data", Course.class);
+
+        query.setParameter("data", id);
+
+        Course course = query.getSingleResult();
+
+        return course;
+    }
+
+    @Override
+    public Student findStudentWitCoursesById(int id) {
+        TypedQuery<Student> query = entityManager.createQuery(
+                "select c from Student c "
+                        + "JOIN FETCH c.courses "
+                        + "where c.id = :data", Student.class);
+
+        query.setParameter("data", id);
+
+        Student student = query.getSingleResult();
+        return student;
+    }
+
+    @Override
+    @Transactional
+    public void update(Student student) {
+        entityManager.merge(student);
     }
 }

@@ -1,9 +1,7 @@
 package com.saeed.springboot.security;
 
 import com.saeed.springboot.security.dao.AppDAO;
-import com.saeed.springboot.security.entity.Course;
-import com.saeed.springboot.security.entity.Instructor;
-import com.saeed.springboot.security.entity.InstructorDetail;
+import com.saeed.springboot.security.entity.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,8 +45,98 @@ public class SecurityApplication {
 
 //			deleteInstructor(appDAO);
 
-			deleteCourseById(appDAO);
+//			deleteCourseById(appDAO);
+
+//			createCourseAndReviews(appDAO);
+//			findCourseWithReviews(appDAO);
+
+//			createCourseAndStudents(appDAO);
+
+//			findCourseWithStudents(appDAO);
+//			findStudentWithCourses(appDAO);
+
+			addCoursesToStudent(appDAO);
 		};
+
+	}
+
+	private void addCoursesToStudent(AppDAO appDAO) {
+		int id = 2;
+
+		Student student = appDAO.findStudentWitCoursesById(id);
+		Course course1  = new Course("new course 1");
+		Course course2  = new Course("new course 2");
+		Course course3  = new Course("new course 3");
+
+		student.addCourse(course1);
+		student.addCourse(course2);
+		student.addCourse(course3);
+
+
+		System.out.println("saving student ... ");
+
+
+		appDAO.update(student);
+
+		System.out.println("done!");
+
+	}
+
+	private void findStudentWithCourses(AppDAO appDAO) {
+		int studentId= 2;
+		Student student = appDAO.findStudentWitCoursesById(studentId);
+
+		System.out.println("finding student with courses:");
+
+		System.out.println(student);
+		System.out.println(student.getCourses());
+
+		System.out.println("done!");
+	}
+
+	private void findCourseWithStudents(AppDAO appDAO) {
+		int courseId = 10;
+
+		Course course = appDAO.findCourseStudentsByCourseId(courseId);
+
+		System.out.println("courses with students:");
+		System.out.println(course);
+		System.out.println(course.getStudents());
+		System.out.println("done!");
+	}
+
+	private void createCourseAndStudents(AppDAO appDAO) {
+		Course course = new Course("new course");
+		course.addStudent(new Student("saeed", "rasooli", "saeed@yahoo"));
+		course.addStudent(new Student("majid", "akbari", "majidi@yahoo"));
+		course.addStudent(new Student("hamid", "hamidi", "hamidi@yahoo"));
+
+		System.out.println("saving course and students...");
+
+		appDAO.SaveCourse(course);
+
+		System.out.println("done! ");
+	}
+
+	private void findCourseWithReviews(AppDAO appDAO) {
+		int courseId = 10;
+
+		Course course = appDAO.findCourseAndReviews(courseId);
+
+		System.out.println("course:" + course);
+		System.out.println("reviews:" + course.getReviews());
+		System.out.println("done!");
+	}
+
+	private void createCourseAndReviews(AppDAO appDAO) {
+		Course course = new Course("saeed course");
+
+		course.addReview(new Review("great"));
+		course.addReview(new Review("not bad"));
+		course.addReview(new Review("it was ok!"));
+		System.out.println("saving course...");
+		appDAO.SaveCourse(course);
+		System.out.println("done!");
 	}
 
 	private void deleteCourseById(AppDAO appDAO) {
